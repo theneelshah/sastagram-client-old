@@ -11,6 +11,9 @@
 # production
 /build
 
+# cloudinary
+/src/cloudinary.js
+
 # misc
 .DS_Store
 .env.local
