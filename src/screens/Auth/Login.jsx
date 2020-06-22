@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { isLoggedIn, login } from "../../auth";
+import { isLoggedIn, login, setUser } from "../../auth";
+import { Button } from "../../util/styles";
 import Toast from "../../util/toast";
-import { Button, Card, Form, Heading, Input } from "./styles";
+import { Card, Form, Heading, Input } from "./styles";
 
 class Login extends Component {
   state = {
@@ -61,9 +62,12 @@ class Login extends Component {
       })
       .then((res) => {
         const { token } = res.data;
-        console.log(res.data);
+        const { name, email, _id } = res.data.user;
+        // console.log(res.data);
         this.setState({ isLoading: false });
         login(token);
+        setUser(name, email, _id);
+
         window.location.reload();
       })
       .catch((error) => {
@@ -111,9 +115,10 @@ class Login extends Component {
           />
           <Button
             type="submit"
-            value="Login"
             disabled={!emailError && !passwordError ? false : true}
-          />
+          >
+            Login
+          </Button>
           <p>
             Don't have an account? <Link to="/signup">Signup</Link>
           </p>

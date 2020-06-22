@@ -2,8 +2,9 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { isLoggedIn } from "../../auth";
+import { Button } from "../../util/styles";
 import Toast from "../../util/toast";
-import { Button, Card, Form, Heading, Input } from "./styles";
+import { Card, Form, Heading, Input } from "./styles";
 
 class Signup extends Component {
   state = {
@@ -58,7 +59,7 @@ class Signup extends Component {
     await axios
       .post(
         "http://127.0.0.1:4546/api/v1/user/signup",
-        { name, email, password },
+        { name: name.toLowerCase(), email, password },
         { headers }
       )
       .then((user) => {
@@ -150,13 +151,14 @@ class Signup extends Component {
           />
           <Button
             type="submit"
-            value="Sign-Up"
             disabled={
               !emailError && !passwordError && !nameError && !cnfPasswordError
                 ? false
                 : true
             }
-          />
+          >
+            Sign-Up
+          </Button>
           <p>
             Already have an account? <Link to="/login">Login</Link>
           </p>

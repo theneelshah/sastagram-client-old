@@ -16,7 +16,7 @@ export const Input = styled.input`
   margin: 2rem auto;
   padding: 5px;
   display: block;
-  width: 30%;
+  /* width: 30%; */
   transition: 0.2s all ease-in;
   background: rgba(var(--b3f, 250, 250, 250), 1);
 
@@ -28,26 +28,17 @@ export const Input = styled.input`
   }
 `;
 
-export const Form = styled.form``;
-
-export const Button = styled.input`
-  background: #0095f6;
-  border: none;
-  cursor: pointer;
-  color: white;
-  margin: 2rem auto;
-  padding: 5px;
-  display: block;
+export const Form = styled.form`
   width: 30%;
-  transition: 0.2s all ease-in;
-  &:disabled {
-    background: #82c7f5;
-    cursor: none;
+  margin: 0 auto;
+  input,
+  button {
+    width: 100%;
   }
 `;
 
 export const Image = styled.div`
-  width: 20%;
+  /* width: 20%; */
   height: 200px;
   margin: 0 auto;
 

@@ -16,6 +16,18 @@ export const Card = styled.div`
 
 export const Form = styled.form`
   text-align: center;
+  width: 30%;
+  margin: 0 auto;
+  input,
+  button {
+    width: 100%;
+  }
+  @media only screen and (max-width: 991px) {
+    width: 60%;
+  }
+  @media only screen and (max-width: 720px) {
+    width: 90%;
+  }
 `;
 
 export const Input = styled.input`
@@ -35,22 +47,6 @@ export const Input = styled.input`
   }
 
   &::placeholder {
-  }
-`;
-
-export const Button = styled.input`
-  background: #0095f6;
-  border: none;
-  cursor: pointer;
-  color: white;
-  margin: 2rem auto;
-  padding: 5px;
-  display: block;
-  width: 30%;
-  transition: 0.2s all ease-in;
-  &:disabled {
-    background: #82c7f5;
-    cursor: none;
   }
 `;
 

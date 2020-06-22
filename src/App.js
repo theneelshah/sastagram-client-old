@@ -8,7 +8,7 @@ const App = () => {
     <div className="App">
       <Router>
         <Navbar />
-        <div style={{ maxWidth: "60%", margin: "0 auto" }}>
+        <div style={{ maxWidth: "60%", margin: "75px auto" }}>
           <Routes />
         </div>
       </Router>

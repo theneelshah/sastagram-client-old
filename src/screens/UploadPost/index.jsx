@@ -2,8 +2,9 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { getToken, isLoggedIn, logout } from "../../auth";
+import { Button } from "../../util/styles";
 import Toast from "../../util/toast";
-import { Button, Card, Form, Image, Input } from "./styles";
+import { Card, Form, Image, Input } from "./styles";
 
 export default class UploadPost extends Component {
   state = {
@@ -14,6 +15,7 @@ export default class UploadPost extends Component {
     imageError: true,
     currentUserToken: null,
     showToast: false,
+    isLoading: false,
   };
   componentDidMount() {
     this.setState({ currentUserToken: getToken() });
@@ -46,52 +48,57 @@ export default class UploadPost extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { imagePath, image, caption, currentUserToken } = this.state;
-      const data = new FormData();
-      data.append("file", image);
-      data.append("upload_preset", "sastagram");
-      data.append("cloud_name", "sastagram");
-      console.log(data);
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/sastagram/image/upload",
-        data
-      );
-      const url = res.data.secure_url;
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer: ${currentUserToken}`,
-      };
+    this.setState({ isLoading: true }, async () => {
+      try {
+        const { imagePath, image, caption, currentUserToken } = this.state;
+        const data = new FormData();
+        data.append("file", image);
+        data.append("upload_preset", "sastagram");
+        data.append("cloud_name", "sastagram");
+        console.log(data);
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/sastagram/image/upload",
+          data
+        );
+        const url = res.data.secure_url;
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer: ${currentUserToken}`,
+        };
 
-      await axios
-        .post(
-          "http://127.0.0.1:4546/api/v1/post",
-          {
-            caption,
-            image: url,
-          },
-          { headers }
-        )
-        .then((result) => {
-          console.log(result.data);
-        })
-        .catch((error) => {
-          console.log(error.response);
-          const { status } = error.response;
-          console.log(status);
-          if (status == 401) {
-            console.log("Called nauthorized");
-            this.setState({ showToast: true }, () => {
-              setTimeout(() => {
-                logout();
-                window.location.reload();
-              }, 2000);
-            });
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
+        await axios
+          .post(
+            "http://127.0.0.1:4546/api/v1/post",
+            {
+              caption,
+              image: url,
+            },
+            { headers }
+          )
+          .then((result) => {
+            console.log(result.data);
+            window.location.href = "http://localhost:3000/profile";
+          })
+          .catch((error) => {
+            console.log(error.response);
+            const { status } = error.response;
+            console.log(status);
+            if (status == 401) {
+              console.log("Called nauthorized");
+              this.setState({ showToast: true }, () => {
+                setTimeout(() => {
+                  logout();
+                  window.location.reload();
+                }, 2000);
+              });
+            }
+          });
+      } catch (error) {
+        console.log(error.response);
+      } finally {
+        this.setState({ isLoading: false });
+      }
+    });
     // fetch("https://api.cloudinary.com/v1_1/sastagram/image/upload");
   };
 
@@ -103,10 +110,14 @@ export default class UploadPost extends Component {
       image,
       imagePath,
       showToast,
+      isLoading,
     } = this.state;
 
     return (
       <Card>
+        {isLoading && (
+          <h1>Uploading on free, bakwass server! Please wait patiently!</h1>
+        )}
         {showToast && (
           <Toast text="You're an unwanted guest. Login again" type="danger" />
         )}
@@ -131,9 +142,10 @@ export default class UploadPost extends Component {
           />
           <Button
             type="submit"
-            value="Upload"
             disabled={!imageError && !captionError ? false : true}
-          />
+          >
+            Upload
+          </Button>
         </Form>
       </Card>
     );
